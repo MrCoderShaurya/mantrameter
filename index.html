@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#080706" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="format-detection" content="telephone=no" />
   <title>Mahamantra Counter</title>
-  
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
+
   <!-- Google Fonts: Cormorant Garamond for sacred numerals & Cinzel for inscriptions -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -46,72 +53,107 @@
   </script>
 
   <style>
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+    }
+
     * {
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
+      -webkit-touch-callout: none;
       box-sizing: border-box;
     }
 
-    body, html {
+    body,
+    html {
       margin: 0;
       padding: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       height: 100dvh;
       background-color: #050404;
       overflow: hidden;
+      overscroll-behavior: none;
       font-family: 'Cormorant Garamond', serif;
       color: #e8d3a7;
+      touch-action: manipulation;
     }
 
     /* Ambient Temple Diya Underglow & Stone Sanctuary Background */
     .sanctuary-bg {
-      background: 
+      background:
         radial-gradient(circle at 50% 50%, rgba(196, 109, 59, 0.16) 0%, rgba(200, 169, 110, 0.08) 38%, rgba(24, 20, 17, 0.75) 68%, #080706 100%),
         radial-gradient(circle at 50% 20%, rgba(200, 169, 110, 0.06) 0%, transparent 50%),
         radial-gradient(circle at 50% 80%, rgba(217, 124, 67, 0.07) 0%, transparent 50%),
         linear-gradient(180deg, #090807 0%, #120f0c 50%, #070605 100%);
     }
 
-    /* Central Altar Medallion Materiality (Carved Dark Stone + Antique Brass Rim) */
+    /* Responsive altar circle and surrounding elements using vmin to never clip on mobile */
     .altar-circle {
-      background: 
+      width: clamp(180px, 47vmin, 290px);
+      height: clamp(180px, 47vmin, 290px);
+      background:
         radial-gradient(circle at 50% 38%, rgba(46, 36, 28, 0.94) 0%, rgba(19, 16, 14, 0.98) 65%, #0b0908 100%);
-      box-shadow: 
-        0 25px 60px -15px rgba(0, 0, 0, 0.95),
-        0 0 55px 2px rgba(196, 109, 59, 0.14),
+      box-shadow:
+        0 18px 45px -10px rgba(0, 0, 0, 0.95),
+        0 0 45px 2px rgba(196, 109, 59, 0.14),
         inset 0 1px 2px rgba(232, 211, 167, 0.28),
-        inset 0 -12px 28px rgba(8, 7, 6, 0.92),
-        inset 0 0 35px rgba(200, 169, 110, 0.1);
-      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        inset 0 -10px 24px rgba(8, 7, 6, 0.92),
+        inset 0 0 30px rgba(200, 169, 110, 0.1);
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      touch-action: manipulation;
     }
 
     .altar-circle:hover {
-      box-shadow: 
-        0 28px 70px -12px rgba(0, 0, 0, 0.98),
-        0 0 65px 8px rgba(217, 124, 67, 0.22),
+      box-shadow:
+        0 24px 60px -10px rgba(0, 0, 0, 0.98),
+        0 0 55px 6px rgba(217, 124, 67, 0.22),
         inset 0 1px 3px rgba(232, 211, 167, 0.35),
-        inset 0 -12px 28px rgba(8, 7, 6, 0.9),
-        inset 0 0 42px rgba(200, 169, 110, 0.14);
+        inset 0 -10px 24px rgba(8, 7, 6, 0.9),
+        inset 0 0 38px rgba(200, 169, 110, 0.14);
     }
 
     .altar-circle.pressed {
-      transform: scale(0.965);
-      box-shadow: 
-        0 14px 35px -8px rgba(0, 0, 0, 0.98),
-        0 0 75px 14px rgba(217, 124, 67, 0.32),
+      transform: scale(0.955);
+      box-shadow:
+        0 10px 25px -6px rgba(0, 0, 0, 0.98),
+        0 0 65px 12px rgba(217, 124, 67, 0.32),
         inset 0 1px 4px rgba(232, 211, 167, 0.45),
-        inset 0 -8px 20px rgba(8, 7, 6, 0.88),
-        inset 0 0 50px rgba(196, 109, 59, 0.25);
+        inset 0 -6px 18px rgba(8, 7, 6, 0.88),
+        inset 0 0 45px rgba(196, 109, 59, 0.25);
+    }
+
+    #mala-ring-svg {
+      width: clamp(220px, 57vmin, 350px);
+      height: clamp(220px, 57vmin, 350px);
+    }
+
+    #diya-halo {
+      width: clamp(230px, 60vmin, 365px);
+      height: clamp(230px, 60vmin, 365px);
+    }
+
+    #ripple-container {
+      width: clamp(180px, 47vmin, 290px);
+      height: clamp(180px, 47vmin, 290px);
+    }
+
+    #bead-count {
+      font-size: clamp(58px, 15vmin, 104px);
     }
 
     /* Diya Flame Breathing Animation */
     @keyframes diyaBreathe {
-      0%, 100% {
+      0%,
+      100% {
         opacity: 0.65;
         transform: scale(1);
       }
+
       50% {
         opacity: 0.95;
         transform: scale(1.04);
@@ -124,8 +166,13 @@
 
     /* Slow rotation for background sacred yantra */
     @keyframes slowMandala {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .sacred-rotation {
@@ -134,10 +181,10 @@
 
     /* Sacred Numeral Glow */
     .numeral-glow {
-      text-shadow: 
-        0 0 32px rgba(217, 124, 67, 0.42),
-        0 0 10px rgba(232, 211, 167, 0.25),
-        0 2px 12px rgba(0, 0, 0, 0.95);
+      text-shadow:
+        0 0 28px rgba(217, 124, 67, 0.42),
+        0 0 8px rgba(232, 211, 167, 0.25),
+        0 2px 10px rgba(0, 0, 0, 0.95);
       font-feature-settings: "lnum" 1, "tnum" 1;
     }
 
@@ -147,8 +194,9 @@
         transform: translate(-50%, -50%) scale(0.88);
         opacity: 0.65;
       }
+
       100% {
-        transform: translate(-50%, -50%) scale(1.42);
+        transform: translate(-50%, -50%) scale(1.38);
         opacity: 0;
       }
     }
@@ -161,103 +209,113 @@
       height: 100%;
       border-radius: 9999px;
       border: 1px solid rgba(200, 169, 110, 0.55);
-      box-shadow: 0 0 30px rgba(196, 109, 59, 0.35);
+      box-shadow: 0 0 25px rgba(196, 109, 59, 0.35);
       pointer-events: none;
-      animation: sacredRipple 1.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: sacredRipple 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Subtle Mantra stanza illumination states */
+    /* Mantra stanza illumination states */
     .mantra-card {
-      transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      touch-action: manipulation;
     }
 
     .mantra-illuminated {
       color: #f4ece1;
-      text-shadow: 
-        0 0 22px rgba(217, 124, 67, 0.55),
-        0 0 8px rgba(232, 211, 167, 0.3);
+      text-shadow:
+        0 0 20px rgba(217, 124, 67, 0.55),
+        0 0 7px rgba(232, 211, 167, 0.3);
       opacity: 0.98;
-      background: radial-gradient(ellipse at 50% 50%, rgba(196, 109, 59, 0.18) 0%, rgba(200, 169, 110, 0.05) 65%, transparent 100%);
-      border-color: rgba(200, 169, 110, 0.35);
-      box-shadow: 0 0 30px rgba(196, 109, 59, 0.12);
+      background: radial-gradient(ellipse at 50% 50%, rgba(196, 109, 59, 0.18) 0%, rgba(200, 169, 110, 0.05) 65%, rgba(14, 13, 12, 0.4) 100%);
+      border-color: rgba(200, 169, 110, 0.38);
+      box-shadow: 0 0 26px rgba(196, 109, 59, 0.15);
     }
 
     .mantra-dimmed {
       color: #c8a96e;
-      text-shadow: 0 0 10px rgba(200, 169, 110, 0.12);
+      text-shadow: 0 0 8px rgba(200, 169, 110, 0.12);
       opacity: 0.65;
-      background: rgba(14, 13, 12, 0.35);
-      border-color: rgba(200, 169, 110, 0.15);
+      background: rgba(14, 13, 12, 0.4);
+      border-color: rgba(200, 169, 110, 0.14);
     }
 
     /* Pulse when a mantra stanza is actively tapped or incremented */
     @keyframes stanzaPulse {
-      0% { transform: scale(1); }
-      40% { transform: scale(1.018); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(1);
+      }
+
+      40% {
+        transform: scale(1.015);
+      }
+
+      100% {
+        transform: scale(1);
+      }
     }
 
     .stanza-pulse {
-      animation: stanzaPulse 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      animation: stanzaPulse 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    /* Responsive scaling for compact screens */
-    @media (max-height: 700px) {
-      .altar-circle {
-        width: 215px !important;
-        height: 215px !important;
+    /* Small height adjustments for devices under 680px */
+    @media (max-height: 680px) {
+      .mantra-card {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
       }
-      #mala-ring-svg {
-        width: 260px !important;
-        height: 260px !important;
+
+      .mantra-text-primary {
+        font-size: 15px !important;
+        line-height: 1.35 !important;
       }
-      #diya-halo {
-        width: 275px !important;
-        height: 275px !important;
+
+      .mantra-tag {
+        font-size: 10px !important;
+        margin-bottom: 3px !important;
       }
-      #ripple-container {
-        width: 215px !important;
-        height: 215px !important;
-      }
-      #bead-count {
-        font-size: 64px !important;
+
+      #tap-hint {
+        margin-top: 4px !important;
       }
     }
 
-    @media (max-height: 560px) {
-      .altar-circle {
-        width: 175px !important;
-        height: 175px !important;
+    /* Ultra-compact / mobile landscape adjustments */
+    @media (max-height: 520px) {
+      #sanctuary-app {
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
       }
-      #mala-ring-svg {
-        width: 215px !important;
-        height: 215px !important;
+
+      .mantra-card {
+        padding: 6px 12px !important;
       }
-      #diya-halo {
-        width: 225px !important;
-        height: 225px !important;
+
+      .mantra-text-primary {
+        font-size: 13px !important;
+        line-height: 1.25 !important;
       }
-      #ripple-container {
-        width: 175px !important;
-        height: 175px !important;
+
+      #tap-hint {
+        display: none !important;
       }
-      #bead-count {
-        font-size: 52px !important;
+
+      #lotus-cradle {
+        display: none !important;
       }
     }
   </style>
 </head>
 
-<body class="w-screen h-screen h-[100dvh] overflow-hidden m-0 p-0 bg-[#050404]">
+<body class="w-full h-full h-[100dvh] overflow-hidden m-0 p-0 bg-[#050404]">
 
   <!-- Edge-to-Edge Full Screen Sanctuary Container -->
-  <main
-    id="sanctuary-app"
-    class="relative w-screen h-screen h-[100dvh] sanctuary-bg overflow-hidden flex flex-col justify-between items-center px-4 sm:px-6 md:px-8 py-3 sm:py-5 select-none"
-  >
+  <main id="sanctuary-app"
+    class="relative w-full h-full h-[100dvh] sanctuary-bg overflow-hidden flex flex-col justify-between items-center select-none"
+    style="padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: max(10px, env(safe-area-inset-bottom)); padding-left: max(14px, env(safe-area-inset-left)); padding-right: max(14px, env(safe-area-inset-right));">
 
     <!-- 1. Procedural Stone Grain Filter Overlay -->
-    <svg class="pointer-events-none absolute inset-0 w-full h-full opacity-[0.04] z-0" aria-hidden="true">
+    <svg class="pointer-events-none absolute inset-0 w-full h-full opacity-[0.035] z-0" aria-hidden="true">
       <filter id="stone-paper-grain">
         <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="4" stitchTiles="stitch" />
         <feColorMatrix type="matrix" values="1 0 0 0 0  0 0.9 0 0 0  0 0 0.75 0 0  0 0 0 0.65 0" />
@@ -266,8 +324,11 @@
     </svg>
 
     <!-- 2. Sacred Concentric Lotus Yantra Watermark -->
-    <div class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.035] z-0 overflow-hidden" aria-hidden="true">
-      <svg class="w-[720px] h-[720px] sacred-rotation" viewBox="0 0 400 400" fill="none" stroke="#c8a96e" stroke-width="0.6">
+    <div
+      class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.032] z-0 overflow-hidden"
+      aria-hidden="true">
+      <svg class="w-[680px] h-[680px] sacred-rotation" viewBox="0 0 400 400" fill="none" stroke="#c8a96e"
+        stroke-width="0.6">
         <circle cx="200" cy="200" r="190" stroke-dasharray="2 4" />
         <circle cx="200" cy="200" r="165" />
         <circle cx="200" cy="200" r="138" />
@@ -304,115 +365,139 @@
     <!-- 3. Interactive Floating Diya Spark Particles Canvas -->
     <canvas id="particle-canvas" class="pointer-events-none absolute inset-0 w-full h-full z-20"></canvas>
 
-    <!-- Floating Quick Actions (Top Right) -->
-    <div class="absolute top-3 right-3 sm:top-5 sm:right-6 z-30 flex items-center space-x-2">
-      <!-- Sound Toggle -->
-      <button
-        id="sound-toggle"
-        type="button"
-        aria-label="Toggle sacred Tulsi bead acoustics"
-        title="Toggle sound"
-        class="flex items-center space-x-1.5 py-1.5 px-3 rounded-full border border-[#c8a96e]/25 hover:border-[#c8a96e]/60 bg-[#181411]/80 backdrop-blur-md text-[#c8a96e]/80 hover:text-[#e8d3a7] shadow-[0_4px_16px_rgba(0,0,0,0.5)] transition-all focus:outline-none cursor-pointer"
-      >
-        <div class="relative w-4 h-4 flex items-center justify-center">
-          <svg id="sound-icon-on" class="w-4 h-4 text-[#e8d3a7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <!-- 4. TOP BAR: Sacred Status Badge (Left) + Quick Actions (Right) -->
+    <header class="relative z-30 w-full max-w-3xl flex items-center justify-between px-1 py-1 sm:py-2">
+      <!-- Left: Completed Malas / Rounds Badge -->
+      <div id="mala-status-pill"
+        class="flex items-center space-x-2 py-1 px-2.5 sm:px-3 rounded-full border border-[#c8a96e]/25 bg-[#181411]/85 backdrop-blur-md shadow-[0_3px_12px_rgba(0,0,0,0.5)]">
+        <span class="w-2 h-2 rounded-full bg-[#d97c43] shadow-[0_0_8px_#d97c43]"></span>
+        <span class="font-inscription uppercase tracking-[0.18em] text-[10px] sm:text-[11px] text-[#e8d3a7]">
+          Mala <span id="mala-round-num" class="font-bold text-[#f4ece1]">0</span>
+        </span>
+        <span class="text-[#c8a96e]/40 text-[10px]">·</span>
+        <span id="header-progress-text" class="font-sans text-[10px] sm:text-[11px] text-[#c8a96e]/80 tracking-wide font-medium">
+          0/108
+        </span>
+      </div>
+
+      <!-- Right: Action Controls (Undo, Sound, Haptic, Reset, Fullscreen) -->
+      <div class="flex items-center space-x-1 sm:space-x-1.5">
+        <!-- Undo Button (Essential for mobile one-handed chanting mistakes) -->
+        <button id="undo-btn" type="button" aria-label="Undo previous bead" title="Undo previous bead"
+          class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#c8a96e]/25 hover:border-[#c8a96e]/60 bg-[#181411]/85 backdrop-blur-md text-[#c8a96e]/75 hover:text-[#e8d3a7] active:scale-90 transition-all focus:outline-none cursor-pointer">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 14L4 9l5-5" />
+            <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11" />
+          </svg>
+        </button>
+
+        <!-- Haptic Vibration Toggle (Mobile Friendly) -->
+        <button id="haptic-toggle" type="button" aria-label="Toggle haptic vibration feedback" title="Toggle vibration"
+          class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#c8a96e]/25 hover:border-[#c8a96e]/60 bg-[#181411]/85 backdrop-blur-md text-[#c8a96e]/75 hover:text-[#e8d3a7] active:scale-90 transition-all focus:outline-none cursor-pointer">
+          <svg id="haptic-icon-on" class="w-3.5 h-3.5 text-[#e8d3a7]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="3" ry="3" />
+            <line x1="1" y1="10" x2="1" y2="14" />
+            <line x1="23" y1="10" x2="23" y2="14" />
+          </svg>
+          <svg id="haptic-icon-off" class="w-3.5 h-3.5 text-[#c8a96e]/40 hidden" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="3" ry="3" />
+            <line x1="2" y1="2" x2="22" y2="22" />
+          </svg>
+        </button>
+
+        <!-- Sound Toggle -->
+        <button id="sound-toggle" type="button" aria-label="Toggle sacred Tulsi bead acoustics" title="Toggle sound"
+          class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#c8a96e]/25 hover:border-[#c8a96e]/60 bg-[#181411]/85 backdrop-blur-md text-[#c8a96e]/75 hover:text-[#e8d3a7] active:scale-90 transition-all focus:outline-none cursor-pointer">
+          <svg id="sound-icon-on" class="w-3.5 h-3.5 text-[#e8d3a7]" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.8">
             <circle cx="12" cy="12" r="2.5" fill="currentColor" />
             <path d="M7.5 7.5 C5 10 5 14 7.5 16.5" stroke-linecap="round" />
             <path d="M16.5 7.5 C19 10 19 14 16.5 16.5" stroke-linecap="round" />
           </svg>
-          <svg id="sound-icon-off" class="w-4 h-4 text-[#c8a96e]/40 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <svg id="sound-icon-off" class="w-3.5 h-3.5 text-[#c8a96e]/40 hidden" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.8">
             <circle cx="12" cy="12" r="2" />
             <path d="M5 19 L19 5" stroke-linecap="round" />
           </svg>
-        </div>
-      </button>
+        </button>
 
-      <!-- Clean Reset Button -->
-      <button
-        id="reset-btn"
-        type="button"
-        aria-label="Reset counter"
-        title="Click to reset bead counter"
-        class="group flex items-center space-x-1.5 py-1.5 px-3 rounded-full border border-[#c8a96e]/25 hover:border-[#c8a96e]/60 bg-[#181411]/80 backdrop-blur-md text-[#c8a96e]/80 hover:text-[#e8d3a7] shadow-[0_4px_16px_rgba(0,0,0,0.5)] transition-all focus:outline-none cursor-pointer"
-      >
-        <svg class="w-4 h-4 text-[#e8d3a7] group-hover:-rotate-90 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
-          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M3 3v5h5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span class="font-inscription uppercase tracking-[0.2em] text-[9px] sm:text-[10px]">
-          Reset
-        </span>
-      </button>
+        <!-- Reset Button -->
+        <button id="reset-btn" type="button" aria-label="Reset counter" title="Click to reset bead counter"
+          class="group flex items-center space-x-1 py-1 px-2.5 sm:px-3 rounded-full border border-[#c8a96e]/25 hover:border-[#c8a96e]/60 bg-[#181411]/85 backdrop-blur-md text-[#c8a96e]/80 hover:text-[#e8d3a7] active:scale-90 transition-all focus:outline-none cursor-pointer">
+          <svg class="w-3.5 h-3.5 text-[#e8d3a7] group-hover:-rotate-90 transition-transform duration-300"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M3 3v5h5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="font-inscription uppercase tracking-[0.16em] text-[9px] sm:text-[10px]">
+            Reset
+          </span>
+        </button>
 
-      <!-- Fullscreen Immersion Button -->
-      <button
-        id="fullscreen-toggle"
-        type="button"
-        aria-label="Toggle fullscreen meditation mode"
-        title="Toggle Fullscreen"
-        class="flex items-center space-x-1.5 py-1.5 px-3 rounded-full border border-[#c8a96e]/25 hover:border-[#c8a96e]/60 bg-[#181411]/80 backdrop-blur-md text-[#c8a96e]/80 hover:text-[#e8d3a7] shadow-[0_4px_16px_rgba(0,0,0,0.5)] transition-all focus:outline-none cursor-pointer"
-      >
-        <svg id="fullscreen-icon-enter" class="w-4 h-4 text-[#e8d3a7]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <svg id="fullscreen-icon-exit" class="w-4 h-4 text-[#e8d3a7] hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M8 3v5H3M16 3v5h5M8 21v-5H3M16 21v-5h5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-    </div>
+        <!-- Fullscreen Immersion Button (Gracefully hidden on devices where unsupported) -->
+        <button id="fullscreen-toggle" type="button" aria-label="Toggle fullscreen mode" title="Toggle Fullscreen"
+          class="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-[#c8a96e]/25 hover:border-[#c8a96e]/60 bg-[#181411]/85 backdrop-blur-md text-[#c8a96e]/75 hover:text-[#e8d3a7] active:scale-90 transition-all focus:outline-none cursor-pointer">
+          <svg id="fullscreen-icon-enter" class="w-3.5 h-3.5 text-[#e8d3a7]" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.6">
+            <path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <svg id="fullscreen-icon-exit" class="w-3.5 h-3.5 text-[#e8d3a7] hidden" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.6">
+            <path d="M8 3v5H3M16 3v5h5M8 21v-5H3M16 21v-5h5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+    </header>
 
-    <!-- 4. MAIN SACRED STAGE: 
+    <!-- 5. MAIN SACRED STAGE: 
          TOP: Pancha-Tattva Mantra
          MIDDLE: Sacred Counter Altar
          BOTTOM: Hare Krishna Mahamantra
     -->
-    <div class="relative z-10 w-full max-w-3xl flex-1 flex flex-col justify-between items-center my-auto py-2 sm:py-4">
+    <div class="relative z-10 w-full max-w-3xl flex-1 flex flex-col justify-between items-center py-1 sm:py-2 min-h-0">
 
       <!-- TOP: PANCHA-TATTVA MANTRA -->
-      <div class="w-full flex flex-col items-center text-center pt-1 sm:pt-2">
-        <button
-          id="pancha-tattva-box"
-          type="button"
-          aria-label="Illuminate Pancha-Tattva Maha-Mantra"
-          class="mantra-card mantra-illuminated group relative w-full max-w-2xl rounded-2xl px-5 py-3 sm:px-7 sm:py-4 text-center focus:outline-none cursor-pointer border border-[#c8a96e]/25 hover:border-[#c8a96e]/45 shadow-[0_6px_28px_rgba(0,0,0,0.45)]"
-        >
-          <div class="flex items-center justify-center space-x-2 mb-1.5">
+      <div class="w-full flex flex-col items-center text-center">
+        <button id="pancha-tattva-box" type="button" aria-label="Illuminate Pancha-Tattva Maha-Mantra"
+          class="mantra-card mantra-illuminated group relative w-full max-w-2xl rounded-xl sm:rounded-2xl px-3.5 py-2 sm:px-6 sm:py-3.5 text-center focus:outline-none cursor-pointer border border-[#c8a96e]/25 hover:border-[#c8a96e]/45 shadow-[0_4px_22px_rgba(0,0,0,0.45)]">
+          <div class="mantra-tag flex items-center justify-center space-x-1.5 mb-1 sm:mb-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-[#d97c43] animate-pulse"></span>
-            <span class="font-inscription uppercase tracking-[0.24em] text-[11px] sm:text-[12.5px] md:text-[13.5px] text-[#d97c43] font-semibold">
+            <span
+              class="font-inscription uppercase tracking-[0.2em] text-[10px] sm:text-[12px] md:text-[13px] text-[#d97c43] font-semibold">
               Pancha-Tattva Mantra
             </span>
             <span class="w-1.5 h-1.5 rounded-full bg-[#d97c43] animate-pulse"></span>
           </div>
-          <div class="flex flex-col space-y-1 leading-[1.45] font-serif italic tracking-[0.015em] text-[17px] sm:text-[21px] md:text-[24px] text-[#f4ece1]">
+          <div
+            class="mantra-text-primary flex flex-col space-y-0.5 leading-[1.35] sm:leading-[1.45] font-serif italic tracking-[0.015em] text-[14px] xs:text-[15.5px] sm:text-[19px] md:text-[22px] text-[#f4ece1]">
             <span class="block">Jaya Śrī-Kṛṣṇa-Caitanya Prabhu Nityānanda,</span>
             <span class="block">Śrī-Advaita Gadādhara Śrīvāsādi-Gaura-Bhakta-Vṛnda</span>
           </div>
         </button>
       </div>
 
-      <!-- MIDDLE: SACRED COUNTER ALTAR -->
-      <div class="relative flex flex-col items-center justify-center my-auto py-2 sm:py-3">
-        <div class="relative flex items-center justify-center">
+      <!-- MIDDLE: SACRED COUNTER ALTAR & 108 BEADS -->
+      <div id="altar-section" class="relative flex flex-col items-center justify-center my-auto py-1 sm:py-2">
+        <div id="altar-touch-wrapper" class="relative flex items-center justify-center cursor-pointer">
 
           <!-- Warm Temple Diya Radial Glow Behind Altar -->
-          <div
-            id="diya-halo"
-            class="pointer-events-none absolute w-[290px] h-[290px] sm:w-[340px] sm:h-[340px] md:w-[370px] md:h-[370px] rounded-full diya-ambient"
-            style="background: radial-gradient(circle, rgba(217, 124, 67, 0.22) 0%, rgba(200, 169, 110, 0.08) 46%, transparent 72%);"
-          ></div>
+          <div id="diya-halo"
+            class="pointer-events-none absolute rounded-full diya-ambient"
+            style="background: radial-gradient(circle, rgba(217, 124, 67, 0.22) 0%, rgba(200, 169, 110, 0.08) 46%, transparent 72%);">
+          </div>
 
           <!-- Expanding Ripple Container for Tap Waves -->
-          <div
-            id="ripple-container"
-            class="pointer-events-none absolute w-[230px] h-[230px] sm:w-[270px] sm:h-[270px] md:w-[295px] md:h-[295px] rounded-full"
-          ></div>
+          <div id="ripple-container"
+            class="pointer-events-none absolute rounded-full">
+          </div>
 
           <!-- 108-Bead Japa Mala Perimeter Halo Ring (SVG) -->
-          <svg
-            id="mala-ring-svg"
-            class="pointer-events-none absolute w-[280px] h-[280px] sm:w-[325px] sm:h-[325px] md:w-[355px] md:h-[355px]"
-            viewBox="0 0 340 340"
-          >
+          <svg id="mala-ring-svg"
+            class="pointer-events-none absolute"
+            viewBox="0 0 340 340">
             <defs>
               <filter id="bead-glow" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="1.8" result="blur" />
@@ -428,24 +513,24 @@
             <g id="beads-group"></g>
             <!-- Sumeru (Head Bead) Crown Marker at 12 O'Clock -->
             <g id="sumeru-crown" transform="translate(170, 10)">
-              <path d="M0 -4 L4.2 3 L0 7.5 L-4.2 3 Z" fill="#c8a96e" stroke="#f4ece1" stroke-width="0.5" filter="url(#bead-glow)" />
+              <path d="M0 -4 L4.2 3 L0 7.5 L-4.2 3 Z" fill="#c8a96e" stroke="#f4ece1" stroke-width="0.5"
+                filter="url(#bead-glow)" />
               <circle cx="0" cy="-6.2" r="1.3" fill="#e8d3a7" opacity="0.85" />
             </g>
           </svg>
 
           <!-- Main Interactive Circular Altar Medallion Button -->
-          <button
-            id="counter-altar"
-            type="button"
-            aria-label="Chant one Mahamantra bead (or press Space)"
-            class="altar-circle relative w-[230px] h-[230px] sm:w-[270px] sm:h-[270px] md:w-[295px] md:h-[295px] rounded-full flex flex-col items-center justify-center focus:outline-none cursor-pointer border border-[#c8a96e]/35"
-          >
+          <button id="counter-altar" type="button" aria-label="Chant one Mahamantra bead"
+            class="altar-circle relative rounded-full flex flex-col items-center justify-center focus:outline-none cursor-pointer border border-[#c8a96e]/35">
             <!-- Inner Antique Brass Hairline Rings -->
-            <div class="pointer-events-none absolute inset-[10px] rounded-full border border-[#c8a96e]/15"></div>
-            <div class="pointer-events-none absolute inset-[18px] rounded-full border border-dashed border-[#c8a96e]/10"></div>
+            <div class="pointer-events-none absolute inset-[7px] sm:inset-[10px] rounded-full border border-[#c8a96e]/15"></div>
+            <div
+              class="pointer-events-none absolute inset-[13px] sm:inset-[18px] rounded-full border border-dashed border-[#c8a96e]/10">
+            </div>
 
             <!-- Delicate 8-Petal Inner Lotus Watermark Behind Numeral -->
-            <svg class="pointer-events-none absolute w-[180px] h-[180px] sm:w-[200px] sm:h-[200px] opacity-[0.08]" viewBox="0 0 200 200" fill="none" stroke="#e8d3a7" stroke-width="0.9">
+            <svg class="pointer-events-none absolute w-[150px] h-[150px] sm:w-[190px] sm:h-[190px] opacity-[0.08]"
+              viewBox="0 0 200 200" fill="none" stroke="#e8d3a7" stroke-width="0.9">
               <circle cx="100" cy="100" r="46" />
               <circle cx="100" cy="100" r="76" stroke-dasharray="1 3" />
               <g>
@@ -463,55 +548,60 @@
             </svg>
 
             <!-- Bead Stage Whisper Label Above Numeral -->
-            <span id="stage-whisper" class="relative z-10 font-inscription uppercase tracking-[0.26em] text-[11px] sm:text-[12.5px] md:text-[13.5px] text-[#c8a96e]/85 mb-0.5 min-h-[16px] transition-opacity duration-500"></span>
+            <span id="stage-whisper"
+              class="relative z-10 font-inscription uppercase tracking-[0.24em] text-[9.5px] xs:text-[11px] sm:text-[12.5px] text-[#c8a96e]/85 mb-0.5 min-h-[14px] sm:min-h-[16px] transition-opacity duration-500"></span>
 
             <!-- Glowing Sacred Count Numeral -->
             <div class="relative z-10 flex items-baseline justify-center my-0.5">
-              <span id="bead-count" class="font-serif font-normal text-[82px] sm:text-[96px] md:text-[108px] leading-none text-[#f4ece1] numeral-glow tracking-tight transition-transform duration-300">
+              <span id="bead-count"
+                class="font-serif font-normal leading-none text-[#f4ece1] numeral-glow tracking-tight transition-transform duration-200">
                 0
               </span>
             </div>
 
             <!-- Fraction & Open Lotus Cradle Beneath Numeral -->
             <div class="relative z-10 flex flex-col items-center mt-0.5">
-              <span class="font-inscription text-[11px] sm:text-[12.5px] md:text-[13.5px] tracking-[0.28em] text-[#c8a96e]/70">
+              <span
+                class="font-inscription text-[9.5px] xs:text-[11px] sm:text-[12.5px] tracking-[0.26em] text-[#c8a96e]/70">
                 of 108
               </span>
 
               <!-- Open Lotus Cradle SVG -->
-              <svg class="mt-1.5 opacity-75" width="64" height="16" viewBox="0 0 68 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M34 2 C37 7 37 12 34 15.5 C31 12 31 7 34 2 Z" stroke="#c8a96e" stroke-width="0.85" fill="rgba(217,124,67,0.12)" />
+              <svg id="lotus-cradle" class="mt-1 sm:mt-1.5 opacity-75 w-11 h-3 sm:w-16 sm:h-4" viewBox="0 0 68 18" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M34 2 C37 7 37 12 34 15.5 C31 12 31 7 34 2 Z" stroke="#c8a96e" stroke-width="0.85"
+                  fill="rgba(217,124,67,0.12)" />
                 <path d="M34 15.5 C28 14 23 10 21 5.5 C26 6.5 30 9.5 34 15.5 Z" stroke="#c8a96e" stroke-width="0.8" />
                 <path d="M34 15.5 C40 14 45 10 47 5.5 C42 6.5 38 9.5 34 15.5 Z" stroke="#c8a96e" stroke-width="0.8" />
-                <path d="M34 15.5 C24 16 15 14 10 10.5 C17 10.5 25 12 34 15.5 Z" stroke="#c8a96e" stroke-width="0.7" opacity="0.65" />
-                <path d="M34 15.5 C44 16 53 14 58 10.5 C51 10.5 43 12 34 15.5 Z" stroke="#c8a96e" stroke-width="0.7" opacity="0.65" />
+                <path d="M34 15.5 C24 16 15 14 10 10.5 C17 10.5 25 12 34 15.5 Z" stroke="#c8a96e" stroke-width="0.7"
+                  opacity="0.65" />
+                <path d="M34 15.5 C44 16 53 14 58 10.5 C51 10.5 43 12 34 15.5 Z" stroke="#c8a96e" stroke-width="0.7"
+                  opacity="0.65" />
               </svg>
             </div>
           </button>
         </div>
 
-        <!-- Gentle keyboard hint -->
-        <span class="font-inscription uppercase tracking-[0.22em] text-[10px] sm:text-[11.5px] text-[#c8a96e]/60 mt-2">
-          Tap Altar or Press [ Space ]
+        <!-- Gentle interaction hint (adaptive for touch vs keyboard) -->
+        <span id="tap-hint" class="font-inscription uppercase tracking-[0.18em] sm:tracking-[0.22em] text-[9px] sm:text-[11px] text-[#c8a96e]/60 mt-1.5 sm:mt-2">
+          Tap circle to chant
         </span>
       </div>
 
       <!-- BOTTOM: HARE KRISHNA MAHAMANTRA -->
-      <div class="w-full flex flex-col items-center text-center pb-1 sm:pb-2">
-        <button
-          id="mahamantra-box"
-          type="button"
-          aria-label="Illuminate Hare Krishna Mahamantra"
-          class="mantra-card mantra-dimmed group relative w-full max-w-2xl rounded-2xl px-5 py-3 sm:px-7 sm:py-4 text-center focus:outline-none cursor-pointer border border-[#c8a96e]/20 hover:border-[#c8a96e]/40 shadow-[0_6px_28px_rgba(0,0,0,0.45)]"
-        >
-          <div class="flex items-center justify-center space-x-2 mb-1.5">
+      <div class="w-full flex flex-col items-center text-center">
+        <button id="mahamantra-box" type="button" aria-label="Illuminate Hare Krishna Mahamantra"
+          class="mantra-card mantra-dimmed group relative w-full max-w-2xl rounded-xl sm:rounded-2xl px-3.5 py-2 sm:px-6 sm:py-3.5 text-center focus:outline-none cursor-pointer border border-[#c8a96e]/20 hover:border-[#c8a96e]/40 shadow-[0_4px_22px_rgba(0,0,0,0.45)]">
+          <div class="mantra-tag flex items-center justify-center space-x-1.5 mb-1 sm:mb-1.5">
             <span class="w-1.5 h-1.5 rounded-full bg-[#c8a96e]/70"></span>
-            <span class="font-inscription uppercase tracking-[0.24em] text-[11px] sm:text-[12.5px] md:text-[13.5px] text-[#c8a96e]/90 font-medium">
+            <span
+              class="font-inscription uppercase tracking-[0.2em] text-[10px] sm:text-[12px] md:text-[13px] text-[#c8a96e]/90 font-medium">
               Hare Krishna Mahamantra · 16 Divine Names
             </span>
             <span class="w-1.5 h-1.5 rounded-full bg-[#c8a96e]/70"></span>
           </div>
-          <div class="flex flex-col space-y-1.5 leading-[1.4] font-serif tracking-[0.025em] text-[18px] sm:text-[22px] md:text-[25px] text-[#e8d3a7]">
+          <div
+            class="mantra-text-primary flex flex-col space-y-0.5 sm:space-y-1 leading-[1.3] sm:leading-[1.4] font-serif tracking-[0.02em] text-[15px] xs:text-[16.5px] sm:text-[20px] md:text-[23px] text-[#e8d3a7]">
             <span class="block font-medium">Hare Kṛṣṇa Hare Kṛṣṇa &nbsp;·&nbsp; Kṛṣṇa Kṛṣṇa Hare Hare</span>
             <span class="block font-medium">Hare Rāma Hare Rāma &nbsp;·&nbsp; Rāma Rāma Hare Hare</span>
           </div>
@@ -524,15 +614,53 @@
 
   <script>
     (function () {
+      // --- Persistence Keys ---
+      const STORAGE_KEY = 'japa_counter_state_v1';
+
       // --- State ---
       const TOTAL_BEADS = 108;
       let currentBead = 0;
       let completedMalas = 0;
       let soundEnabled = true;
-      let hasAttemptedFullscreen = false;
+      let hapticEnabled = true;
+      let wakeLock = null;
+
+      // Restore saved state if exists
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (typeof parsed.currentBead === 'number' && parsed.currentBead >= 0 && parsed.currentBead <= TOTAL_BEADS) {
+            currentBead = parsed.currentBead;
+          }
+          if (typeof parsed.completedMalas === 'number' && parsed.completedMalas >= 0) {
+            completedMalas = parsed.completedMalas;
+          }
+          if (typeof parsed.soundEnabled === 'boolean') {
+            soundEnabled = parsed.soundEnabled;
+          }
+          if (typeof parsed.hapticEnabled === 'boolean') {
+            hapticEnabled = parsed.hapticEnabled;
+          }
+        }
+      } catch (err) {
+        // Ignore localStorage error
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            currentBead,
+            completedMalas,
+            soundEnabled,
+            hapticEnabled
+          }));
+        } catch (err) {}
+      }
 
       // --- DOM Elements ---
       const counterAltar = document.getElementById('counter-altar');
+      const altarTouchWrapper = document.getElementById('altar-touch-wrapper');
       const beadCountEl = document.getElementById('bead-count');
       const stageWhisperEl = document.getElementById('stage-whisper');
       const beadsGroup = document.getElementById('beads-group');
@@ -540,33 +668,71 @@
       const panchaTattvaBox = document.getElementById('pancha-tattva-box');
       const mahamantraBox = document.getElementById('mahamantra-box');
       const resetBtn = document.getElementById('reset-btn');
+      const undoBtn = document.getElementById('undo-btn');
       const soundToggle = document.getElementById('sound-toggle');
       const soundIconOn = document.getElementById('sound-icon-on');
       const soundIconOff = document.getElementById('sound-icon-off');
+      const hapticToggle = document.getElementById('haptic-toggle');
+      const hapticIconOn = document.getElementById('haptic-icon-on');
+      const hapticIconOff = document.getElementById('haptic-icon-off');
       const fullscreenToggle = document.getElementById('fullscreen-toggle');
       const fullscreenIconEnter = document.getElementById('fullscreen-icon-enter');
       const fullscreenIconExit = document.getElementById('fullscreen-icon-exit');
+      const malaRoundNum = document.getElementById('mala-round-num');
+      const headerProgressText = document.getElementById('header-progress-text');
+      const tapHint = document.getElementById('tap-hint');
       const particleCanvas = document.getElementById('particle-canvas');
       const ctx = particleCanvas.getContext('2d');
 
-      // --- 1. Auto-request Browser Fullscreen on first user gesture ---
-      function requestFullscreenImmersion() {
-        if (!hasAttemptedFullscreen) {
-          hasAttemptedFullscreen = true;
-          if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen().catch(() => {});
-          }
+      // Update tap hint for physical touch vs desktop keyboard
+      const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      if (tapHint) {
+        tapHint.textContent = isTouchDevice ? 'Tap circle to chant' : 'Tap circle or press [ Space ]';
+      }
+
+      // Screen Wake Lock API to prevent mobile screen sleep during Japa
+      async function keepScreenAwake() {
+        if ('wakeLock' in navigator) {
+          try {
+            if (!wakeLock) {
+              wakeLock = await navigator.wakeLock.request('screen');
+              wakeLock.addEventListener('release', () => {
+                wakeLock = null;
+              });
+            }
+          } catch (e) {}
         }
       }
 
-      // --- 2. Build 108-Bead Perimeter Halo SVG ---
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          keepScreenAwake();
+        }
+      });
+
+      // --- Haptic Feedback ---
+      function triggerHaptic(type = 'bead') {
+        if (!hapticEnabled || !navigator.vibrate) return;
+        try {
+          if (type === 'bead') {
+            navigator.vibrate(12);
+          } else if (type === 'quarter') {
+            navigator.vibrate([15, 35, 15]);
+          } else if (type === 'sumeru') {
+            navigator.vibrate([35, 45, 35, 45, 60]);
+          } else if (type === 'undo') {
+            navigator.vibrate(22);
+          }
+        } catch (e) {}
+      }
+
+      // --- Build 108-Bead Perimeter Halo SVG ---
       const beadElements = [];
       const centerX = 170;
       const centerY = 170;
       const radius = 154;
 
       for (let i = 1; i <= TOTAL_BEADS; i++) {
-        // Distribute 108 beads clockwise starting right of 12 o'clock Sumeru
         const angleDeg = -90 + (i / (TOTAL_BEADS + 1)) * 360;
         const angleRad = (angleDeg * Math.PI) / 180;
         const x = centerX + radius * Math.cos(angleRad);
@@ -578,13 +744,13 @@
         circle.setAttribute('cy', y.toFixed(2));
         circle.setAttribute('r', isQuarterMarker ? '2.4' : '1.4');
         circle.setAttribute('fill', isQuarterMarker ? 'rgba(200, 169, 110, 0.42)' : 'rgba(200, 169, 110, 0.18)');
-        circle.style.transition = 'fill 0.35s ease, r 0.35s ease';
+        circle.style.transition = 'fill 0.3s ease, r 0.3s ease';
 
         beadsGroup.appendChild(circle);
         beadElements.push({ el: circle, isQuarter: isQuarterMarker });
       }
 
-      // --- 3. Web Audio API: Sacred Tulsi Wood Click & Tanpura Resonance ---
+      // --- Web Audio API: Sacred Tulsi Wood Click & Tanpura Resonance ---
       let audioCtx = null;
 
       function initAudio() {
@@ -607,11 +773,11 @@
 
           const now = audioCtx.currentTime;
 
-          // Tactile Carved Tulsi Wooden Bead Click (Significantly Boosted Volume)
+          // Tactile Carved Tulsi Wooden Bead Click
           const clickOsc = audioCtx.createOscillator();
           const clickGain = audioCtx.createGain();
           clickOsc.type = 'triangle';
-          clickOsc.frequency.setValueAtTime(210, now);
+          clickOsc.frequency.setValueAtTime(220, now);
           clickOsc.frequency.exponentialRampToValueAtTime(70, now + 0.05);
 
           clickGain.gain.setValueAtTime(0.7, now);
@@ -622,14 +788,14 @@
           clickOsc.start(now);
           clickOsc.stop(now + 0.065);
 
-          // Warm Tanpura / Temple Bell Harmonic Resonance (Significantly Boosted Volume)
+          // Warm Tanpura / Temple Bell Harmonic Resonance
           const droneOsc = audioCtx.createOscillator();
           const droneGain = audioCtx.createGain();
           droneOsc.type = 'sine';
           const baseFreq = isSumeruCompletion ? 554.37 : 277.18;
           droneOsc.frequency.setValueAtTime(baseFreq, now);
 
-          const duration = isSumeruCompletion ? 2.8 : 0.75;
+          const duration = isSumeruCompletion ? 2.6 : 0.7;
           const peakGain = isSumeruCompletion ? 0.65 : 0.32;
 
           droneGain.gain.setValueAtTime(0.001, now);
@@ -640,34 +806,35 @@
           droneGain.connect(audioCtx.destination);
           droneOsc.start(now);
           droneOsc.stop(now + duration + 0.05);
-        } catch (err) {
-          // Ignore audio restrictions
-        }
+        } catch (err) {}
       }
 
-      // --- 4. Golden Diya Particle Engine (HTML5 Canvas) ---
+      // --- Golden Diya Particle Engine (HTML5 Canvas) ---
       let particles = [];
 
       function resizeCanvas() {
-        particleCanvas.width = window.innerWidth;
-        particleCanvas.height = window.innerHeight;
+        if (particleCanvas) {
+          particleCanvas.width = window.innerWidth;
+          particleCanvas.height = window.innerHeight;
+        }
       }
 
       window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 150));
       resizeCanvas();
 
-      function spawnDiyaParticles(originX, originY, count = 9) {
+      function spawnDiyaParticles(originX, originY, count = 8) {
         for (let i = 0; i < count; i++) {
           const angle = Math.random() * Math.PI * 2;
-          const dist = 20 + Math.random() * 95;
+          const dist = 15 + Math.random() * 80;
           particles.push({
             x: originX + Math.cos(angle) * (dist * 0.35),
             y: originY + Math.sin(angle) * (dist * 0.35),
-            vx: (Math.random() - 0.5) * 0.65,
-            vy: -0.45 - Math.random() * 0.95,
-            radius: 0.9 + Math.random() * 1.8,
+            vx: (Math.random() - 0.5) * 0.6,
+            vy: -0.4 - Math.random() * 0.85,
+            radius: 0.9 + Math.random() * 1.6,
             alpha: 0.65 + Math.random() * 0.35,
-            decay: 0.007 + Math.random() * 0.009,
+            decay: 0.008 + Math.random() * 0.01,
             hue: Math.random() > 0.4 ? '#e8d3a7' : '#d97c43'
           });
         }
@@ -691,7 +858,7 @@
           ctx.globalAlpha = Math.max(0, p.alpha);
           ctx.fillStyle = p.hue;
           ctx.shadowColor = '#d97c43';
-          ctx.shadowBlur = 8;
+          ctx.shadowBlur = 6;
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
           ctx.fill();
@@ -701,7 +868,7 @@
         requestAnimationFrame(animateParticles);
       }
 
-      // --- 5. UI Illumination & State Sync ---
+      // --- UI Illumination & State Sync ---
       function setMantraIllumination(activeTarget, triggerPulse = false) {
         if (activeTarget === 'pancha') {
           panchaTattvaBox.classList.add('mantra-illuminated');
@@ -728,11 +895,13 @@
 
       function updateBeadHaloUI() {
         beadCountEl.textContent = currentBead;
+        if (malaRoundNum) malaRoundNum.textContent = completedMalas;
+        if (headerProgressText) headerProgressText.textContent = `${currentBead}/108`;
 
         // Stage whisper
         if (stageWhisperEl) {
           if (currentBead === 0) {
-            stageWhisperEl.textContent = completedMalas > 0 ? `Mala ${completedMalas}` : '';
+            stageWhisperEl.textContent = completedMalas > 0 ? `Mala ${completedMalas} Done` : '';
             setMantraIllumination('pancha', false);
           } else if (currentBead === 108) {
             stageWhisperEl.textContent = `Purna · Mala ${completedMalas + 1} Done`;
@@ -761,6 +930,8 @@
             item.el.setAttribute('r', item.isQuarter ? '2.4' : '1.4');
           }
         }
+
+        saveState();
       }
 
       function createRipple() {
@@ -769,12 +940,12 @@
         rippleContainer.appendChild(ring);
         setTimeout(() => {
           ring.remove();
-        }, 1250);
+        }, 1100);
       }
 
-      // --- 6. Increment Chanting Counter ---
+      // --- Increment Chanting Counter ---
       function incrementChant(clientX, clientY) {
-        requestFullscreenImmersion();
+        keepScreenAwake();
 
         if (currentBead >= TOTAL_BEADS) {
           currentBead = 0;
@@ -787,9 +958,11 @@
           completedMalas += 1;
         }
 
+        const isQuarter = currentBead === 27 || currentBead === 54 || currentBead === 81;
+
         // Tactile press animation
         counterAltar.classList.add('pressed');
-        setTimeout(() => counterAltar.classList.remove('pressed'), 220);
+        setTimeout(() => counterAltar.classList.remove('pressed'), 180);
 
         // Update UI & pulse the active Mahamantra stanza
         updateBeadHaloUI();
@@ -804,46 +977,89 @@
         const altarRect = counterAltar.getBoundingClientRect();
         const x = clientX ? clientX : (altarRect.left + altarRect.width / 2);
         const y = clientY ? clientY : (altarRect.top + altarRect.height / 2);
-        spawnDiyaParticles(x, y, isMalaDone ? 28 : 10);
+        spawnDiyaParticles(x, y, isMalaDone ? 24 : 9);
 
-        // Play synthesized Tulsi wooden bead click + tanpura resonance
+        // Haptic feedback
+        if (isMalaDone) {
+          triggerHaptic('sumeru');
+        } else if (isQuarter) {
+          triggerHaptic('quarter');
+        } else {
+          triggerHaptic('bead');
+        }
+
+        // Tulsi bead sound
         playTulsiBeadSound(isMalaDone);
       }
 
-      // --- 7. Event Listeners ---
-      counterAltar.addEventListener('pointerdown', (e) => {
+      // --- Undo Previous Bead ---
+      function undoChant() {
+        if (currentBead > 0) {
+          currentBead -= 1;
+        } else if (completedMalas > 0) {
+          completedMalas -= 1;
+          currentBead = TOTAL_BEADS - 1;
+        } else {
+          return;
+        }
+
+        counterAltar.classList.add('pressed');
+        setTimeout(() => counterAltar.classList.remove('pressed'), 150);
+
+        updateBeadHaloUI();
+        triggerHaptic('undo');
+        playTulsiBeadSound(false);
+
+        const rect = undoBtn.getBoundingClientRect();
+        spawnDiyaParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 6);
+      }
+
+      // --- Event Listeners with Mobile Touch Optimizations ---
+      // Primary altar click/tap
+      altarTouchWrapper.addEventListener('pointerdown', (e) => {
         e.preventDefault();
         incrementChant(e.clientX, e.clientY);
       });
 
-      // Keyboard accessibility (Space / Enter)
+      // Undo button
+      undoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        undoChant();
+      });
+
+      // Keyboard accessibility (Space / Enter / Backspace)
       window.addEventListener('keydown', (e) => {
         if (e.code === 'Space' || e.code === 'Enter') {
           if (document.activeElement !== panchaTattvaBox && document.activeElement !== mahamantraBox) {
             e.preventDefault();
             incrementChant();
           }
+        } else if (e.code === 'Backspace') {
+          e.preventDefault();
+          undoChant();
         }
       });
 
       // Interactive Mantra Focus
       panchaTattvaBox.addEventListener('click', () => {
-        requestFullscreenImmersion();
+        keepScreenAwake();
         setMantraIllumination('pancha', true);
         const rect = panchaTattvaBox.getBoundingClientRect();
-        spawnDiyaParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 8);
+        spawnDiyaParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 7);
+        triggerHaptic('bead');
         playTulsiBeadSound(false);
       });
 
       mahamantraBox.addEventListener('click', () => {
-        requestFullscreenImmersion();
+        keepScreenAwake();
         setMantraIllumination('mahamantra', true);
         const rect = mahamantraBox.getBoundingClientRect();
-        spawnDiyaParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 8);
+        spawnDiyaParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 7);
+        triggerHaptic('bead');
         playTulsiBeadSound(false);
       });
 
-      // Simple, instant Reset button
+      // Reset Button (Instant reset of current round or all)
       resetBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (currentBead > 0) {
@@ -853,35 +1069,75 @@
         }
         updateBeadHaloUI();
         createRipple();
+        triggerHaptic('undo');
         playTulsiBeadSound(false);
         const rect = resetBtn.getBoundingClientRect();
         spawnDiyaParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, 8);
       });
 
       // Sound Toggle
-      soundToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        soundEnabled = !soundEnabled;
+      function syncSoundUI() {
         if (soundEnabled) {
           soundIconOn.classList.remove('hidden');
           soundIconOff.classList.add('hidden');
-          playTulsiBeadSound(false);
         } else {
           soundIconOn.classList.add('hidden');
           soundIconOff.classList.remove('hidden');
         }
+      }
+
+      soundToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        soundEnabled = !soundEnabled;
+        syncSoundUI();
+        saveState();
+        if (soundEnabled) {
+          playTulsiBeadSound(false);
+        }
+        triggerHaptic('bead');
       });
 
-      // Fullscreen Toggle
-      if (fullscreenToggle) {
+      // Haptic Toggle
+      function syncHapticUI() {
+        if (hapticEnabled) {
+          hapticIconOn.classList.remove('hidden');
+          hapticIconOff.classList.add('hidden');
+        } else {
+          hapticIconOn.classList.add('hidden');
+          hapticIconOff.classList.remove('hidden');
+        }
+      }
+
+      hapticToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        hapticEnabled = !hapticEnabled;
+        syncHapticUI();
+        saveState();
+        if (hapticEnabled) {
+          triggerHaptic('bead');
+        }
+      });
+
+      // Fullscreen Toggle (Hidden if unsupported e.g. iOS Safari)
+      const canFullscreen = !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
+      if (!canFullscreen && fullscreenToggle) {
+        fullscreenToggle.style.display = 'none';
+      } else if (fullscreenToggle) {
         fullscreenToggle.addEventListener('click', (e) => {
           e.stopPropagation();
+          triggerHaptic('bead');
           if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(() => {});
+            const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+            if (req) {
+              req.call(document.documentElement).catch(() => {});
+            }
             fullscreenIconEnter.classList.add('hidden');
             fullscreenIconExit.classList.remove('hidden');
           } else {
-            document.exitFullscreen().catch(() => {});
+            const exit = document.exitFullscreen || document.webkitExitFullscreen;
+            if (exit) {
+              exit.call(document).catch(() => {});
+            }
             fullscreenIconEnter.classList.remove('hidden');
             fullscreenIconExit.classList.add('hidden');
           }
@@ -899,8 +1155,18 @@
         });
       }
 
-      // Start animation loop on window load
+      // Initial UI Sync on window load
+      window.addEventListener('DOMContentLoaded', () => {
+        syncSoundUI();
+        syncHapticUI();
+        resizeCanvas();
+        updateBeadHaloUI();
+        animateParticles();
+      });
+
       window.onload = function () {
+        syncSoundUI();
+        syncHapticUI();
         resizeCanvas();
         updateBeadHaloUI();
         animateParticles();
@@ -908,4 +1174,5 @@
     })();
   </script>
 </body>
+
 </html>
